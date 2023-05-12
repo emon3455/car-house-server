@@ -27,6 +27,7 @@ async function run() {
     const serviceCollections = client.db('carsDoctorDB').collection('services');
     const bookingCollections = client.db('carsDoctorDB').collection('bookings');
 
+    // get/read all services
     app.get("/services", async(req,res)=>{
 
         const cars = serviceCollections.find();
@@ -35,6 +36,7 @@ async function run() {
 
     });
 
+    // get/read specific service
     app.get("/services/:id", async (req,res)=>{
         const id  = req.params.id;
         const query = { _id: new ObjectId(id)};
@@ -55,15 +57,23 @@ async function run() {
       }
       const result = await bookingCollections.find(query).toArray();
       res.send(result);
-      
+
     })
 
+    // add bookings
     app.post("/bookings",async(req,res)=>{
       const booking = req.body;
       const result = await bookingCollections.insertOne(booking);
       res.send(result);      
     })
 
+    // delete specific bookings:
+    app.delete("/bookings/:id", async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await bookingCollections.deleteOne(query);
+      res.send(result);
+    })
 
 
 
